@@ -11,14 +11,19 @@ local function make(classDef)
   -- Creates instance
   local self = setmetatable({}, metatable)
 
+  -- Optionally initializes it
+  if self.init then self:init() end
+
   -- Returns instance
   return self
 end
 
-local Display = {
-  driver = nil,
-  display = nil,
-}
+local Display = {}
+
+function Display:init()
+  self.driver = nil
+  self.display = nil
+end
 
 function Display:setRenderScript(script)
   -- Updates the script

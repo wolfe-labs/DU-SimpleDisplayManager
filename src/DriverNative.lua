@@ -1,5 +1,5 @@
 -- Comment the next line on your IDE when developing, this converts the entire source into a string that is later embedded on SDM's render script
-return { driverType = 'native', returns = false, driverHead = [[Context = (function ()
+-- return { driverType = 'native', returns = false, driverHead = [[Context = (function ()
 
 -- Creates a new instance of an class
 local function make(classDef)
@@ -10,6 +10,9 @@ local function make(classDef)
 
   -- Creates instance
   local self = setmetatable({}, metatable)
+
+  -- Optionally initializes it
+  if self.init then self:init() end
 
   -- Returns instance
   return self
@@ -31,7 +34,7 @@ end
 
 local Context = {
   -- Default Screen Unit resolution on legacy SVGs
-  resolution = { w = 1024, h = 612},
+  resolution = { w = 1024, h = 612 },
 
   -- The layers of the Context object
   layers = {},
@@ -40,11 +43,7 @@ local Context = {
   current = nil
 }
 
-local Layer = {
-  strokeWidth = 1,
-  strokeColor = makeColor(1, 1, 1),
-  fillColor = makeColor(0, 0, 0),
-}
+local Layer = {}
 
 -- Creates a new Context object
 function Context.create()
@@ -69,6 +68,14 @@ function Context:createLayer()
 
   -- Returns instance of the said layer
   return layer
+end
+
+-- Initializes the layer
+function Layer:init()
+  self.strokeWidth = 1
+  self.strokeColor = makeColor(1, 1, 1)
+  self.fillColor = makeColor(0, 0, 0)
+  self.currentFont = nil
 end
 
 -- Sets current color for fill
