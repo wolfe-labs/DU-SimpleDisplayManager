@@ -284,7 +284,7 @@ end
 
 -- Adds an image
 function Layer:drawImage(image, x, y, width, height)
-    -- "Draws"
+  -- "Draws"
   self.contents.image = self.contents.image .. '<image x="' .. x .. '" y="' .. y .. '" width="' .. width .. '" height="' .. height .. '" href="' .. image.path .. '" />'
 
   -- Returns self instance for chaining
