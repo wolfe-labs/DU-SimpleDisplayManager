@@ -1,5 +1,5 @@
 -- Comment the next line on your IDE when developing, this converts the entire source into a string that is later embedded on SDM's render script
--- return { driverType = 'native', returns = false, driverHead = [[Context = (function ()
+return { driverType = 'native', returns = false, driverHead = [[Context = (function ()
 
 -- Creates a new instance of an class
 local function make(classDef)
@@ -41,6 +41,9 @@ local Context = {
 
   -- Current context
   current = nil
+
+  -- Current font
+  currentFont = loadFont('Play', 14),
 }
 
 local Layer = {}
@@ -70,12 +73,42 @@ function Context:createLayer()
   return layer
 end
 
+-- Loads a font for usage
+function Context:loadFont(font, size)
+  -- Creates the new font and returns the internal handle to it
+  return loadFont(font, size)
+end
+
+-- Loads an image for usage
+function Context:loadImage(path)
+  -- Loads the new image and returns the internal handle to it
+  return loadImage(path)
+end
+
 -- Initializes the layer
 function Layer:init()
   self.strokeWidth = 1
   self.strokeColor = makeColor(1, 1, 1)
   self.fillColor = makeColor(0, 0, 0)
   self.currentFont = nil
+end
+
+-- Gets active font from layer
+function Layer:getCurrentFont()
+  if self.currentFont then
+    return self.currentFont
+  else
+    return Context.currentFont
+  end
+end
+
+-- Sets active font for layer
+function Layer:setFont(font)
+  -- Updates active font for entire layer
+  self.currentFont = font
+
+  -- Returns self instance for chaining
+  return self
 end
 
 -- Sets current color for fill
@@ -149,6 +182,89 @@ function Layer:drawRect(x, y, width, height)
   return self
 end
 
+-- Adds a circle to a layer
+function Layer:drawCircle(centerX, centerY, radius)
+  -- Prepares strokes and fill colors
+  self:prepareForDrawing()
+
+  -- Sends draw call downstream
+  addCircle(self._layer, centerX, centerY, radius)
+
+  -- Returns self instance for chaining
+  return self
+end
+
+-- Adds a line to a layer
+function Layer:drawLine(x1, y1, x2, y2)
+  -- Load stroke color
+  local s = self.strokeColor
+
+  -- Load fill color
+  local f = self.fillColor
+
+  -- "Draws"
+  self.contents.line = self.contents.line .. '<line x1="' .. x1 .. '" y1="' .. y1 .. '" x2="' .. x2 .. '" y2="' .. y2 .. '" style="fill:rgba(' .. f.r .. ', ' .. f.g .. ', ' .. f.b .. ', ' .. f.a .. ');stroke:rgba(' .. s.r .. ', ' .. s.g .. ', ' .. s.b .. ', ' .. s.a .. ');stroke-width:' .. self.strokeWidth .. ';" />'
+
+  -- Returns self instance for chaining
+  return self
+end
+
+-- Adds a quadrilateral to a layer
+function Layer:drawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
+  -- Load stroke color
+  local s = self.strokeColor
+
+  -- Load fill color
+  local f = self.fillColor
+
+  -- "Draws"
+  self.contents.quad = self.contents.quad .. '<path d="M' .. x1 .. ' ' .. y1 .. ' L' .. x2 .. ' ' .. y2 .. ' L' .. x3 .. ' ' .. y3 .. ' L' .. x4 .. ' ' .. y4 .. ' Z" class="quad" style="fill:rgba(' .. f.r .. ', ' .. f.g .. ', ' .. f.b .. ', ' .. f.a .. ');stroke:rgba(' .. s.r .. ', ' .. s.g .. ', ' .. s.b .. ', ' .. s.a .. ');stroke-width:' .. self.strokeWidth .. ';" />'
+
+  -- Returns self instance for chaining
+  return self
+end
+
+-- Adds a triangle to a layer
+function Layer:drawTriangle(x1, y1, x2, y2, x3, y3)
+  -- Prepares strokes and fill colors
+  self:prepareForDrawing()
+
+  -- Sends draw call downstream
+  addTriangle(self._layer, x1, y1, x2, y2, x3, y3)
+
+  -- Returns self instance for chaining
+  return self
+end
+
+-- Adds a text to a layer
+function Layer:drawText(text, x, y, font)
+  -- Prepares strokes and fill colors
+  self:prepareForDrawing()
+
+  -- Load active font from the Layer or Context
+  if not font then
+    font = self:getCurrentFont()
+  end
+
+  -- Sends draw call downstream
+  addText(self._layer, font, text, x, y)
+
+  -- Returns self instance for chaining
+  return self
+end
+
+-- Adds an image
+function Layer:drawImage(image, x, y, width, height)
+  -- Prepares strokes and fill colors
+  self:prepareForDrawing()
+
+  -- Sends draw call downstream
+  addImage(self._layer, image, x, y, width, height)
+
+  -- Returns self instance for chaining
+  return self
+end
+
 -- Generates a context for working with gfx
 return Context.create()
-end)()]], driverFoot = 'return Context:render()' }
+end)()]], driverFoot = '' }
