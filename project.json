@@ -1,0 +1,38 @@
+{
+  "name": "@wolfe-labs/SDM",
+  "description": "Wolfe Labs Simple Display Management Driver",
+  "sourcePath": "src",
+  "outputPath": "out",
+  "builds": {
+    "SDM": {
+      "name": "SDM",
+      "slots": {}
+    },
+    "test/sample-svg": {
+      "name": "test/sample-svg",
+      "slots": {
+        "screen": {
+          "name": "screen",
+          "type": "screen"
+        }
+      }
+    },
+    "test/sample-new": {
+      "name": "test/sample-new",
+      "slots": {
+        "screen": {
+          "name": "screen",
+          "type": "screen"
+        },
+        "undefined": {}
+      }
+    }
+  },
+  "targets": {
+    "development": {
+      "name": "development",
+      "handleErrors": true,
+      "minify": false
+    }
+  }
+}
