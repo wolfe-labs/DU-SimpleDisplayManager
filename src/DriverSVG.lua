@@ -41,12 +41,6 @@ local Context = {
 
   -- Current context
   current = nil,
-
-  -- Current font
-  currentFont = {
-    name = 'Play',
-    size = 14,
-  },
 }
 
 local Layer = {}
@@ -54,6 +48,14 @@ local Layer = {}
 -- Creates a new Context object
 function Context.create()
   return make(Context)
+end
+
+-- Initializes the Context
+function Context:init()
+  self.currentFont = {
+    name = 'Play',
+    size = 14,
+  }
 end
 
 -- Renders the current Context
@@ -93,6 +95,9 @@ end
 function Context:createLayer()
   -- Creates a new Layer instance
   local layer = make(Layer)
+
+  -- Marks as parent
+  layer.context = self
 
   -- Saves into layer list
   table.insert(self.layers, layer)
@@ -135,7 +140,7 @@ function Layer:getCurrentFont()
   if self.currentFont then
     return self.currentFont
   else
-    return Context.currentFont
+    return self.context.currentFont
   end
 end
 

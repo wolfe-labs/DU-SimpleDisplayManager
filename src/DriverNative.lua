@@ -41,9 +41,6 @@ local Context = {
 
   -- Current context
   current = nil
-
-  -- Current font
-  currentFont = loadFont('Play', 14),
 }
 
 local Layer = {}
@@ -51,6 +48,11 @@ local Layer = {}
 -- Creates a new Context object
 function Context.create()
   return make(Context)
+end
+
+-- Handles Context initialization
+function Context:init()
+  self.currentFont = loadFont('Play', 14)
 end
 
 -- Returns only default Screen size from DU
@@ -62,6 +64,9 @@ end
 function Context:createLayer()
   -- Creates a new Layer instance
   local layer = make(Layer)
+
+  -- Marks as parent
+  layer.context = self
   
   -- Assigns a native layer to it
   layer._layer = createLayer()
@@ -98,7 +103,7 @@ function Layer:getCurrentFont()
   if self.currentFont then
     return self.currentFont
   else
-    return Context.currentFont
+    return self.context.currentFont
   end
 end
 
