@@ -1,5 +1,5 @@
 local DriverSVG = require('@wolfe-labs/SDM:DriverSVG')
-local DriverNative = require('@wolfe-labs/SDM:DriverNative')
+local DriverNative = require('@wolfe-labs/SDM:DriverNativeRedux')
 
 -- Creates a new instance of an class
 local function make(classDef)

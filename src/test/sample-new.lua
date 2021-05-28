@@ -2,7 +2,27 @@
 if not print then print = system.print end
 if not screen then
   screen = {
-    setRenderScript = (function (renderScript) print('Running in headless mode, printing output:'); print(renderScript) end)
+    setRenderScript = (function (renderScript)
+      print('Running in headless mode, printing output:');
+      print([[
+        local _I = 0;
+        function id() _I = _I + 1; return _I; end;
+        function loadFont(name, size) i = id(); print('loadFont(' .. name .. ', ' .. size .. ') -> ' .. i); return i; end;
+        function loadImage(path) i = id(); print('loadImage(' .. path .. ') -> ' .. i); return i; end;
+        function getResolution() return {w = 640, h = 480} end;
+        function createLayer() i = id(); print('createLayer() -> ' .. i); return i; end;
+        function setNextStrokeWidth(size) print('setNextStrokeWidth(' .. size .. ')'); end;
+        function setNextStrokeColor(r, g, b, a) print('setNextStrokeColor(' .. r .. ', ' .. g .. ', ' .. b .. ', ' .. a .. ')'); end;
+        function setNextFillColor(r, g, b, a) print('setNextFillColor(' .. r .. ', ' .. g .. ', ' .. b .. ', ' .. a .. ')'); end;
+        function addBox(layer, x, y, w, h) print('addBox(' .. layer .. ', ' .. x .. ', ' .. y .. ', ' .. w .. ', ' .. h .. ')'); end;
+        function addText(layer, font, text, x, y) print('addText(' .. layer .. ', ' .. font .. ', ' .. text .. ', ' .. x .. ', ' .. y .. ')'); end;
+        function addLine(layer, x1, y1, x2, y2) print('addLine(' .. layer .. ', ' .. x1 .. ', ' .. y1 .. ', ' .. x2 .. ', ' .. y2 .. ')'); end;
+        function addQuad(layer, x1, y1, x2, y2, x3, y3, x4, y4) print('addQuad(' .. x1 .. ', ' .. y1 .. ', ' .. x2 .. ', ' .. y2 .. ', ' .. x3 .. ', ' .. y2 .. ', ' .. x4 .. ', ' .. y4 .. ')'); end;
+        function addImage(layer, image, x, y, w, h) print('addImage(' .. layer .. ', ' .. image .. ', ' .. x .. ', ' .. y .. ', ' .. w .. ', ' .. h .. ')'); end;
+        function addCircle(layer, x, y, r) print('addCircle(' .. layer .. ', ' .. x .. ', ' .. y .. ', ' .. r .. ')'); end;
+      ]])
+      print(renderScript) 
+    end)
   }
 end
 --------------------------------------------------------------------------------------------
