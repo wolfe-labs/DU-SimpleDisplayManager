@@ -156,7 +156,7 @@ end
 -- Prepares to draw a shape
 function Layer:prepareForDrawing()
   -- Sets next stroke color
-  if self.strokeColor.a > 0 && self.strokeWidth > 0 then
+  if self.strokeColor.a > 0 and self.strokeWidth > 0 then
     -- Load stroke color
     local s = self.strokeColor
 
@@ -201,14 +201,11 @@ end
 
 -- Adds a line to a layer
 function Layer:drawLine(x1, y1, x2, y2)
-  -- Load stroke color
-  local s = self.strokeColor
+  -- Prepares strokes and fill colors
+  self:prepareForDrawing()
 
-  -- Load fill color
-  local f = self.fillColor
-
-  -- "Draws"
-  self.contents.line = self.contents.line .. '<line x1="' .. x1 .. '" y1="' .. y1 .. '" x2="' .. x2 .. '" y2="' .. y2 .. '" style="fill:rgba(' .. f.r .. ', ' .. f.g .. ', ' .. f.b .. ', ' .. f.a .. ');stroke:rgba(' .. s.r .. ', ' .. s.g .. ', ' .. s.b .. ', ' .. s.a .. ');stroke-width:' .. self.strokeWidth .. ';" />'
+  -- Sends draw call downstream
+  addLine(self._layer, x1, y1, x2, y2)
 
   -- Returns self instance for chaining
   return self
@@ -216,14 +213,11 @@ end
 
 -- Adds a quadrilateral to a layer
 function Layer:drawQuad(x1, y1, x2, y2, x3, y3, x4, y4)
-  -- Load stroke color
-  local s = self.strokeColor
+  -- Prepares strokes and fill colors
+  self:prepareForDrawing()
 
-  -- Load fill color
-  local f = self.fillColor
-
-  -- "Draws"
-  self.contents.quad = self.contents.quad .. '<path d="M' .. x1 .. ' ' .. y1 .. ' L' .. x2 .. ' ' .. y2 .. ' L' .. x3 .. ' ' .. y3 .. ' L' .. x4 .. ' ' .. y4 .. ' Z" class="quad" style="fill:rgba(' .. f.r .. ', ' .. f.g .. ', ' .. f.b .. ', ' .. f.a .. ');stroke:rgba(' .. s.r .. ', ' .. s.g .. ', ' .. s.b .. ', ' .. s.a .. ');stroke-width:' .. self.strokeWidth .. ';" />'
+  -- Sends draw call downstream
+  addQuad(self._layer, x1, y1, x2, y2, x3, y3, x4, y4)
 
   -- Returns self instance for chaining
   return self
