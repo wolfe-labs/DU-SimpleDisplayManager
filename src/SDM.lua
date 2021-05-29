@@ -26,6 +26,11 @@ function Display:init()
 end
 
 function Display:setRenderScript(script)
+  -- If we're dealing with a script builder, render it here first
+  if 'table' == type(script) and script.getRenderScript then
+    script = script:getRenderScript()
+  end
+
   -- Updates the script
   self.script = script
 

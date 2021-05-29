@@ -26,6 +26,16 @@
         },
         "undefined": {}
       }
+    },
+    "test/sample-builder": {
+      "name": "test/sample-builder",
+      "slots": {
+        "screen": {
+          "name": "screen",
+          "type": "screen"
+        },
+        "undefined": {}
+      }
     }
   },
   "targets": {
